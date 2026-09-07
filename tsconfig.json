@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    // Carpeta donde escribes tu codigo TypeScript
+    "rootDir": "src",
+    // Carpeta donde TypeScript deja el JavaScript ya traducido
+    "outDir": "js",
+    // Version de JavaScript de salida (el movil lo entiende bien)
+    "target": "ES2020",
+    // Formato de modulos que entiende el navegador con <script type="module">
+    "module": "ES2020",
+    // Modo estricto: te avisa como Java/C# si usas null sin control
+    "strict": true,
+    // No nos hacen falta librerias externas para este proyecto
+    "skipLibCheck": true
+  },
+  // Solo compila lo que haya dentro de src/
+  "include": ["src/**/*"]
+}
