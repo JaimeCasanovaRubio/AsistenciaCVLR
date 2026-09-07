@@ -4,7 +4,7 @@
 // Ciclo de vida: install (guardar) -> activate (limpiar viejo) -> fetch (servir).
 
 // Nombre del "cajon" de cache. Cambialo si cambias archivos para forzar actualizacion.
-const CACHE = 'asistencia-v2';
+const CACHE = 'asistencia-v3';
 
 // Archivos imprescindibles para abrir la app sin internet.
 // OJO: js/*.js los genera "npx tsc", deben existir antes de instalar.
