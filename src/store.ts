@@ -221,26 +221,29 @@ export function getAttendanceForPlayerOnDate(playerId: string, date: string): At
   return state.attendances.find((a) => a.playerId === playerId && a.date === date);
 }
 
-// % de un jugador: asistidos / marcados (ignorando falta_injustificada como en la app vieja).
-// Copia exacta de getPlayerAttendancePercent de DataContext.tsx:219.
-export function getPlayerAttendancePercent(playerId: string): number {
-  const marks = state.attendances.filter((a) => a.playerId === playerId);
-  if (marks.length === 0) return 0;
-  const ok = marks.filter((a) => a.status === 'asistido').length;
-  return Math.round((ok / marks.length) * 100);
+function attendanceScore(status: Attendance['status']): number {
+  if (status === 'asistido') return 1;
+  if (status === 'retraso') return 0.9;
+  return 0;
 }
 
-// % de un equipo: media de sus jugadores (misma formula que la app vieja).
+export function getPlayerAttendancePercent(playerId: string): number {
+  const valid = state.attendances.filter((a) => a.playerId === playerId && a.status !== 'falta_justificada');
+  if (valid.length === 0) return 0;
+  const score = valid.reduce((sum, a) => sum + attendanceScore(a.status), 0);
+  return Math.round((score / valid.length) * 100);
+}
+
 export function getTeamAttendancePercent(teamId: string): number {
   const players = state.players.filter((p) => p.teamId === teamId);
   if (players.length === 0) return 0;
   let total = 0;
-  let ok = 0;
+  let score = 0;
   for (const p of players) {
-    const marks = state.attendances.filter((a) => a.playerId === p.id);
-    total += marks.length;
-    ok += marks.filter((a) => a.status === 'asistido').length;
+    const valid = state.attendances.filter((a) => a.playerId === p.id && a.status !== 'falta_justificada');
+    total += valid.length;
+    score += valid.reduce((sum, a) => sum + attendanceScore(a.status), 0);
   }
   if (total === 0) return 0;
-  return Math.round((ok / total) * 100);
+  return Math.round((score / total) * 100);
 }
